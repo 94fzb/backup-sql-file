@@ -5,10 +5,10 @@
     <title>${_plugin.name} - V${_plugin.version} - 记录查看</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css"/>
 </head>
-<body>
+<body style="background: transparent">
 <div class="main-container">
-    <div class="col-xs-8">
-        <h3>查看文件列表 (仅保留最近${maxKeepSize}条记录)</h3>
+    <div class="col-xs-8" style="padding: 0">
+    <h3>查看文件列表 (仅保留最近${maxKeepSize}条记录)</h3>
         <hr/>
         <table class="table table-bordered table-striped">
             <thead>
