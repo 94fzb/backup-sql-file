@@ -11,8 +11,19 @@
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/jquery.gritter.min.js"></script>
     <script src="js/set_update.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            font-variant: tabular-nums;
+            line-height: 1.5;
+            font-feature-settings: 'tnum';
+            background: transparent;
+        }
+    </style>
 </head>
-<body style="background: transparent">
+<body>
 <div class="col-xs-8" style="padding: 0">
     <h3>${_plugin.desc}</h3>
     <div class="text-right">
@@ -47,7 +58,7 @@
                 </select>
             </div>
             <div>
-                <h4><a href="filelist">查看历史备份文件</a></h4>
+                <h4><a href="filelist?spm=index">查看历史备份文件</a></h4>
             </div>
         </div>
         <hr/>
