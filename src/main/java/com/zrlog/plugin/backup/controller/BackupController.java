@@ -6,25 +6,27 @@ import com.zrlog.plugin.IOSession;
 import com.zrlog.plugin.backup.Start;
 import com.zrlog.plugin.backup.scheduler.BackupJob;
 import com.zrlog.plugin.common.IdUtil;
+import com.zrlog.plugin.common.LoggerUtil;
 import com.zrlog.plugin.data.codec.ContentType;
 import com.zrlog.plugin.data.codec.HttpRequestInfo;
 import com.zrlog.plugin.data.codec.MsgPacket;
 import com.zrlog.plugin.data.codec.MsgPacketStatus;
 import com.zrlog.plugin.type.ActionType;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by xiaochun on 2016/2/13.
  */
 public class BackupController {
 
-    private static Logger LOGGER = Logger.getLogger(BackupController.class);
+    private static Logger LOGGER = LoggerUtil.getLogger(BackupController.class);
 
     private IOSession session;
     private MsgPacket requestPacket;
@@ -78,7 +80,7 @@ public class BackupController {
                         session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_ERROR);
                     }
                 } catch (Exception e) {
-                    LOGGER.error("", e);
+                    LOGGER.log(Level.SEVERE,"", e);
                 }
 
             }

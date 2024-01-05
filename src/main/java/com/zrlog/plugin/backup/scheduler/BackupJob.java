@@ -4,7 +4,7 @@ import com.hibegin.common.util.IOUtil;
 import com.zrlog.plugin.IOSession;
 import com.zrlog.plugin.backup.Start;
 import com.zrlog.plugin.backup.scheduler.handle.BackupExecution;
-import org.apache.log4j.Logger;
+import com.zrlog.plugin.common.LoggerUtil;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
@@ -14,10 +14,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BackupJob implements Job {
 
-    private static final Logger LOGGER = Logger.getLogger(BackupJob.class);
+    private static final Logger LOGGER = LoggerUtil.getLogger(BackupJob.class);
 
     public static File backupThenStoreToPrivateStore(IOSession ioSession, Properties properties) throws Exception {
         URI uri = new URI(properties.getProperty("jdbcUrl").replace("jdbc:", ""));
@@ -37,7 +39,7 @@ public class BackupJob implements Job {
             map.put("fileInfo", new String[]{dbFile + "," + dbName + "/" + dbFile.getName()});
             ioSession.requestService("uploadToPrivateService", map);
         } catch (Exception e) {
-            LOGGER.info("uploadToPrivate error", e);
+            LOGGER.log(Level.SEVERE,"uploadToPrivate error", e);
         }
         return dbFile;
     }
@@ -72,9 +74,9 @@ public class BackupJob implements Job {
             IOSession ioSession = (IOSession) context.getJobDetail().getJobDataMap().get("ioSession");
             backupThenStoreToPrivateStore(ioSession, prop);
         } catch (URISyntaxException e) {
-            LOGGER.error("jdbcUrl error", e);
+            LOGGER.log(Level.SEVERE,"jdbcUrl error", e);
         } catch (Exception e) {
-            LOGGER.error("", e);
+            LOGGER.log(Level.SEVERE,"", e);
         } finally {
             clearFile();
         }
