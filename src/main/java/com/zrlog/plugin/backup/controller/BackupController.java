@@ -70,19 +70,16 @@ public class BackupController {
             @Override
             public void handler(final MsgPacket response) {
                 Map<String, Object> map = new Gson().fromJson(response.getDataStr(), Map.class);
-                Properties properties = new Properties();
                 try {
-                    properties.load(new FileInputStream((String) map.get("dbProperties")));
-                    File file = BackupJob.backupThenStoreToPrivateStore(session, properties);
+                    File file = BackupJob.backupThenStoreToPrivateStore(session, (String) map.get("dbProperties"));
                     if (file.exists()) {
                         session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_SUCCESS);
                     } else {
                         session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_ERROR);
                     }
                 } catch (Exception e) {
-                    LOGGER.log(Level.SEVERE,"", e);
+                    LOGGER.log(Level.SEVERE, "", e);
                 }
-
             }
         });
 

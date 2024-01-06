@@ -5,8 +5,6 @@ import com.zrlog.plugin.backup.Start;
 import com.zrlog.plugin.backup.scheduler.handle.BackupExecution;
 import com.zrlog.plugin.common.IOUtil;
 import com.zrlog.plugin.common.LoggerUtil;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,31 +15,44 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class BackupJob implements Job {
+public class BackupJob implements Runnable {
 
     private static final Logger LOGGER = LoggerUtil.getLogger(BackupJob.class);
 
-    public static File backupThenStoreToPrivateStore(IOSession ioSession, Properties properties) throws Exception {
-        URI uri = new URI(properties.getProperty("jdbcUrl").replace("jdbc:", ""));
-        String dbName = uri.getPath().replace("/", "");
-        File dbFile =
-                new File(Start.sqlPath + dbName + "_" + new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date()) +
-                        ".sql");
-        if (!dbFile.getParentFile().exists()) {
-            dbFile.getParentFile().mkdirs();
+    private final IOSession ioSession;
+    private final String propFile;
+
+    public BackupJob(IOSession ioSession, String propFile) {
+        this.ioSession = ioSession;
+        this.propFile = propFile;
+    }
+
+    public static File backupThenStoreToPrivateStore(IOSession ioSession, String propertiesFile) throws Exception {
+        try(FileInputStream fileInputStream = new FileInputStream(propertiesFile)){
+            Properties properties = new Properties();
+            properties.load(fileInputStream);
+            URI uri = new URI(properties.getProperty("jdbcUrl").replace("jdbc:", ""));
+            String dbName = uri.getPath().replace("/", "");
+            File dbFile =
+                    new File(Start.sqlPath + dbName + "_" + new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date()) +
+                            ".sql");
+            if (!dbFile.getParentFile().exists()) {
+                dbFile.getParentFile().mkdirs();
+            }
+            BackupExecution backupExecution = new BackupExecution();
+            byte[] dumpFileBytes = backupExecution.getDumpFileBytes(properties.getProperty("user"), uri.getPort(),
+                    uri.getHost(), dbName, properties.getProperty("password"));
+            IOUtil.writeBytesToFile(dumpFileBytes, dbFile);
+            try {
+                Map<String, String[]> map = new HashMap<>();
+                map.put("fileInfo", new String[]{dbFile + "," + dbName + "/" + dbFile.getName()});
+                ioSession.requestService("uploadToPrivateService", map);
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "uploadToPrivate error", e);
+            }
+            return dbFile;
         }
-        BackupExecution backupExecution = new BackupExecution();
-        byte[] dumpFileBytes = backupExecution.getDumpFileBytes(properties.getProperty("user"), uri.getPort(),
-                uri.getHost(), dbName, properties.getProperty("password"));
-        IOUtil.writeBytesToFile(dumpFileBytes, dbFile);
-        try {
-            Map<String, String[]> map = new HashMap<>();
-            map.put("fileInfo", new String[]{dbFile + "," + dbName + "/" + dbFile.getName()});
-            ioSession.requestService("uploadToPrivateService", map);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE,"uploadToPrivate error", e);
-        }
-        return dbFile;
+
     }
 
     public static void clearFile() {
@@ -67,16 +78,13 @@ public class BackupJob implements Job {
     }
 
     @Override
-    public void execute(JobExecutionContext context) {
+    public void run() {
         try {
-            Properties prop = new Properties();
-            prop.load(new FileInputStream(context.getJobDetail().getJobDataMap().get("dbProperties").toString()));
-            IOSession ioSession = (IOSession) context.getJobDetail().getJobDataMap().get("ioSession");
-            backupThenStoreToPrivateStore(ioSession, prop);
+            backupThenStoreToPrivateStore(ioSession, propFile);
         } catch (URISyntaxException e) {
-            LOGGER.log(Level.SEVERE,"jdbcUrl error", e);
+            LOGGER.log(Level.SEVERE, "jdbcUrl error", e);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE,"", e);
+            LOGGER.log(Level.SEVERE, "", e);
         } finally {
             clearFile();
         }
