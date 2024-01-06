@@ -33,9 +33,12 @@ public class BackupJob implements Runnable {
             properties.load(fileInputStream);
             URI uri = new URI(properties.getProperty("jdbcUrl").replace("jdbc:", ""));
             String dbName = uri.getPath().replace("/", "");
+            StringJoiner sj = new StringJoiner("_");
+            sj.add(dbName);
+            sj.add(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+            sj.add(UUID.randomUUID().toString().replace("-",""));
             File dbFile =
-                    new File(Start.sqlPath + dbName + "_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) +
-                            ".sql");
+                    new File(Start.sqlPath + sj + ".sql");
             if (!dbFile.getParentFile().exists()) {
                 dbFile.getParentFile().mkdirs();
             }
