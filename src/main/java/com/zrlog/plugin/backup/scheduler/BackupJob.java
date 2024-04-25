@@ -44,13 +44,11 @@ public class BackupJob implements Runnable {
             BackupExecution backupExecution = new BackupExecution();
             File tempFile = backupExecution.dumpToFile(properties.getProperty("user"), uri.getPort(),
                     uri.getHost(), dbName, properties.getProperty("password"));
-            String newFileMd5 = SecurityUtils.md5(new FileInputStream(tempFile));
+            String newFileMd5 = SecurityUtils.md5ByFile(tempFile);
             for (File file : dbFile.getParentFile().listFiles()) {
-                try (FileInputStream fin = new FileInputStream(file.toString())) {
-                    if (Objects.equals(newFileMd5, SecurityUtils.md5(fin))) {
-                        tempFile.delete();
-                        return file;
-                    }
+                if (Objects.equals(newFileMd5, SecurityUtils.md5ByFile(file))) {
+                    tempFile.delete();
+                    return file;
                 }
             }
             tempFile.renameTo(dbFile);
