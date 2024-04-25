@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.StringJoiner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -92,12 +93,20 @@ public class BackupExecution {
         }
         Runtime runtime = Runtime.getRuntime();
         Process process = runtime.exec(execString);
-        byte[] bytes = IOUtil.getByteByInputStream(process.getInputStream());
-        if (bytes.length == 0) {
-            bytes = IOUtil.getByteByInputStream(process.getErrorStream());
-            LOGGER.log(Level.SEVERE, "The system not support mysqldump cmd \n" + new String(bytes));
+        String[] strArr = IOUtil.getStringInputStream(process.getErrorStream()).split("\r\n");
+        if (strArr.length == 0) {
+            LOGGER.log(Level.SEVERE, "The system not support mysqldump cmd \n");
+            return new byte[0];
         }
         process.destroy();
-        return bytes;
+        StringJoiner sj = new StringJoiner("\r\n");
+        for (String sql : strArr) {
+            //ignore time info
+            if (sql.startsWith("-- Dump completed on")) {
+                continue;
+            }
+            sj.add(sql);
+        }
+        return sj.toString().getBytes();
     }
 }
