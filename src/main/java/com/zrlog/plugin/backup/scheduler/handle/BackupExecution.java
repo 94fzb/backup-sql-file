@@ -93,13 +93,13 @@ public class BackupExecution {
         }
         Runtime runtime = Runtime.getRuntime();
         Process process = runtime.exec(execString);
-        String[] strArr = IOUtil.getStringInputStream(process.getErrorStream()).split("\r\n");
+        String[] strArr = IOUtil.getStringInputStream(process.getErrorStream()).split("\n");
         process.destroy();
         if (strArr.length == 0) {
             LOGGER.log(Level.SEVERE, "The system not support mysqldump cmd \n");
             return new byte[0];
         }
-        StringJoiner sj = new StringJoiner("\r\n");
+        StringJoiner sj = new StringJoiner("\n");
         for (String sql : strArr) {
             //ignore time info
             if (sql.startsWith("-- Dump completed on")) {
