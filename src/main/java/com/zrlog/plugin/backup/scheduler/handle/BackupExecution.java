@@ -97,6 +97,9 @@ public class BackupExecution {
             try (BufferedReader b = new BufferedReader(inputStreamReader)) {
                 String line;
                 while ((line = b.readLine()) != null) {
+                    if (line.startsWith("-- Dump completed on")) {
+                        continue;
+                    }
                     fileOutputStream.write(line.getBytes());
                     fileOutputStream.write("\n".getBytes());
                 }
