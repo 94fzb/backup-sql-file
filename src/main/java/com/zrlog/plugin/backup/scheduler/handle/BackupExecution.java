@@ -93,7 +93,7 @@ public class BackupExecution {
         }
         Runtime runtime = Runtime.getRuntime();
         Process process = runtime.exec(execString);
-        String[] strArr = IOUtil.getStringInputStream(process.getErrorStream()).split("\n");
+        String[] strArr = IOUtil.getStringInputStream(process.getInputStream()).split("\n");
         process.destroy();
         if (strArr.length == 0) {
             LOGGER.log(Level.SEVERE, "The system not support mysqldump cmd \n");
