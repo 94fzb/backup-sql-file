@@ -1,16 +1,12 @@
 package com.zrlog.plugin.backup.scheduler.handle;
 
 import com.zrlog.plugin.RunConstants;
-import com.zrlog.plugin.common.IOUtil;
 import com.zrlog.plugin.common.LoggerUtil;
 import com.zrlog.plugin.common.PathKit;
 import com.zrlog.plugin.type.RunType;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.StringJoiner;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,32 +77,32 @@ public class BackupExecution {
         }
     }
 
-    public byte[] getDumpFileBytes(String user, int port, String host, String dbName, String password) throws Exception {
-        if (RunConstants.runType == RunType.DEV) {
-            LOGGER.info("DumpFile start");
-        }
+    public File dumpToFile(String user, int port, String host, String dbName, String password) throws Exception {
+        new File(PathKit.getTmpPath()).mkdirs();
+        File file = File.createTempFile("temp", ".sql", new File(PathKit.getTmpPath()));
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
 
-        String execString = getBinFile() + " -f -h" + host + " -P" + port + "  -u" + user + " -p" + password + " " +
-                "--databases " + dbName;
-        if (RunConstants.runType == RunType.DEV) {
-            LOGGER.info(execString);
-        }
-        Runtime runtime = Runtime.getRuntime();
-        Process process = runtime.exec(execString);
-        String[] strArr = IOUtil.getStringInputStream(process.getInputStream()).split("\n");
-        process.destroy();
-        if (strArr.length == 0) {
-            LOGGER.log(Level.SEVERE, "The system not support mysqldump cmd \n");
-            return new byte[0];
-        }
-        StringJoiner sj = new StringJoiner("\n");
-        for (String sql : strArr) {
-            //ignore time info
-            if (sql.startsWith("-- Dump completed on")) {
-                continue;
+            if (RunConstants.runType == RunType.DEV) {
+                LOGGER.info("DumpFile start");
             }
-            sj.add(sql);
+
+            String execString = getBinFile() + " -f -h" + host + " -P" + port + "  -u" + user + " -p" + password + " " +
+                    "--databases " + dbName;
+            if (RunConstants.runType == RunType.DEV) {
+                LOGGER.info(execString);
+            }
+            Runtime runtime = Runtime.getRuntime();
+            Process process = runtime.exec(execString);
+            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(), Charset.defaultCharset());
+            try (BufferedReader b = new BufferedReader(inputStreamReader)) {
+                String line;
+                while ((line = b.readLine()) != null) {
+                    fileOutputStream.write(line.getBytes());
+                    fileOutputStream.write("\n".getBytes());
+                }
+            }
+            process.destroy();
         }
-        return sj.toString().getBytes();
+        return file;
     }
 }

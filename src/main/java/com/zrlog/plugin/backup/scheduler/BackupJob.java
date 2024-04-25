@@ -3,7 +3,6 @@ package com.zrlog.plugin.backup.scheduler;
 import com.zrlog.plugin.IOSession;
 import com.zrlog.plugin.backup.Start;
 import com.zrlog.plugin.backup.scheduler.handle.BackupExecution;
-import com.zrlog.plugin.common.IOUtil;
 import com.zrlog.plugin.common.LoggerUtil;
 import com.zrlog.plugin.common.SecurityUtils;
 
@@ -38,23 +37,23 @@ public class BackupJob implements Runnable {
             sj.add(dbName);
             sj.add(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
             sj.add(UUID.randomUUID().toString().replace("-", ""));
-            File dbFile =
-                    new File(Start.sqlPath + sj + ".sql");
+            File dbFile = new File(Start.sqlPath + sj + ".sql");
             if (!dbFile.getParentFile().exists()) {
                 dbFile.getParentFile().mkdirs();
             }
             BackupExecution backupExecution = new BackupExecution();
-            byte[] dumpFileBytes = backupExecution.getDumpFileBytes(properties.getProperty("user"), uri.getPort(),
+            File tempFile = backupExecution.dumpToFile(properties.getProperty("user"), uri.getPort(),
                     uri.getHost(), dbName, properties.getProperty("password"));
-            String newFileMd5 = SecurityUtils.md5(dumpFileBytes);
+            String newFileMd5 = SecurityUtils.md5(new FileInputStream(tempFile));
             for (File file : dbFile.getParentFile().listFiles()) {
                 try (FileInputStream fin = new FileInputStream(file.toString())) {
                     if (Objects.equals(newFileMd5, SecurityUtils.md5(fin))) {
+                        tempFile.delete();
                         return file;
                     }
                 }
             }
-            IOUtil.writeBytesToFile(dumpFileBytes, dbFile);
+            tempFile.renameTo(dbFile);
             try {
                 Map<String, String[]> map = new HashMap<>();
                 map.put("fileInfo", new String[]{dbFile + "," + dbName + "/" + dbFile.getName()});
