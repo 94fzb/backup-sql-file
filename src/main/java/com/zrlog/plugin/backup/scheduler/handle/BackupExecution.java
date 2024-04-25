@@ -50,7 +50,7 @@ public class BackupExecution {
             return true;
         } catch (IOException e) {
             if (RunConstants.runType == RunType.DEV) {
-                LOGGER.log(Level.SEVERE,"unSupport mysqldump", e);
+                LOGGER.log(Level.SEVERE, "UnSupport mysqldump", e);
             }
             return false;
         }
@@ -63,41 +63,30 @@ public class BackupExecution {
         byte[] tempByte = new byte[1024];
         try {
             int length;
-            FileOutputStream fileOutputStream = null;
-            try {
-                file.getParentFile().mkdirs();
-                fileOutputStream = new FileOutputStream(file);
+            file.getParentFile().mkdirs();
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
                 while ((length = inputStream.read(tempByte)) != -1) {
                     fileOutputStream.write(tempByte, 0, length);
                 }
             } catch (IOException e) {
-                LOGGER.log(Level.SEVERE,"stream error", e);
-            } finally {
-                if (fileOutputStream != null) {
-                    try {
-                        fileOutputStream.close();
-                    } catch (IOException e) {
-                        LOGGER.log(Level.SEVERE,"stream error", e);
-                    }
-                }
+                LOGGER.log(Level.SEVERE, "stream error", e);
             }
         } finally {
             try {
                 inputStream.close();
             } catch (IOException e) {
-                LOGGER.log(Level.SEVERE,"stream error", e);
+                LOGGER.log(Level.SEVERE, "stream error", e);
             }
         }
     }
 
     public byte[] getDumpFileBytes(String user, int port, String host, String dbName, String password) throws Exception {
         if (RunConstants.runType == RunType.DEV) {
-            LOGGER.info("dumpFile start");
+            LOGGER.info("DumpFile start");
         }
 
-        String execString =
-                getBinFile().toString() + " -f -h" + host + " -P" + port + "  -u" + user + " -p" + password + " " +
-                        "--databases " + dbName;
+        String execString = getBinFile() + " -f -h" + host + " -P" + port + "  -u" + user + " -p" + password + " " +
+                "--databases " + dbName;
         if (RunConstants.runType == RunType.DEV) {
             LOGGER.info(execString);
         }
@@ -106,7 +95,7 @@ public class BackupExecution {
         byte[] bytes = IOUtil.getByteByInputStream(process.getInputStream());
         if (bytes.length == 0) {
             bytes = IOUtil.getByteByInputStream(process.getErrorStream());
-            LOGGER.log(Level.SEVERE,"the system not support mysqldump cmd \n" + new String(bytes));
+            LOGGER.log(Level.SEVERE, "The system not support mysqldump cmd \n" + new String(bytes));
         }
         process.destroy();
         return bytes;

@@ -26,11 +26,11 @@ import java.util.logging.Logger;
  */
 public class BackupController {
 
-    private static Logger LOGGER = LoggerUtil.getLogger(BackupController.class);
+    private static final Logger LOGGER = LoggerUtil.getLogger(BackupController.class);
 
-    private IOSession session;
-    private MsgPacket requestPacket;
-    private HttpRequestInfo requestInfo;
+    private final IOSession session;
+    private final MsgPacket requestPacket;
+    private final HttpRequestInfo requestInfo;
 
     public BackupController(IOSession session, MsgPacket requestPacket, HttpRequestInfo requestInfo) {
         this.session = session;
@@ -88,15 +88,10 @@ public class BackupController {
     public void index() {
         Map<String, Object> keyMap = new HashMap<>();
         keyMap.put("key", "cycle");
-        session.sendJsonMsg(keyMap, ActionType.GET_WEBSITE.name(), IdUtil.getInt(), MsgPacketStatus.SEND_REQUEST, new IMsgPacketCallBack() {
-            @Override
-            public void handler(MsgPacket msgPacket) {
-                Map map = new Gson().fromJson(msgPacket.getDataStr(), Map.class);
-                if (map.get("cycle") == null) {
-                    map.put("cycle", "3600");
-                }
-                session.responseHtml("/templates/index.ftl", map, requestPacket.getMethodStr(), requestPacket.getMsgId());
-            }
+        session.sendJsonMsg(keyMap, ActionType.GET_WEBSITE.name(), IdUtil.getInt(), MsgPacketStatus.SEND_REQUEST, msgPacket -> {
+            Map map = new Gson().fromJson(msgPacket.getDataStr(), Map.class);
+            map.putIfAbsent("cycle", "3600");
+            session.responseHtml("/templates/index.ftl", map, requestPacket.getMethodStr(), requestPacket.getMsgId());
         });
 
     }
@@ -110,11 +105,7 @@ public class BackupController {
                     fileList.add(file);
                 }
             }
-            Collections.sort(fileList, new Comparator<File>() {
-                public int compare(File f1, File f2) {
-                    return (int) (f2.lastModified() - f1.lastModified());
-                }
-            });
+            Collections.sort(fileList, (f1, f2) -> (int) (f2.lastModified() - f1.lastModified()));
         }
 
         Map map = new HashMap();

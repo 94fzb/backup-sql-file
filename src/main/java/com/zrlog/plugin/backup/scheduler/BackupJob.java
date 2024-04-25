@@ -5,6 +5,7 @@ import com.zrlog.plugin.backup.Start;
 import com.zrlog.plugin.backup.scheduler.handle.BackupExecution;
 import com.zrlog.plugin.common.IOUtil;
 import com.zrlog.plugin.common.LoggerUtil;
+import com.zrlog.plugin.common.SecurityUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +29,7 @@ public class BackupJob implements Runnable {
     }
 
     public static File backupThenStoreToPrivateStore(IOSession ioSession, String propertiesFile) throws Exception {
-        try(FileInputStream fileInputStream = new FileInputStream(propertiesFile)){
+        try (FileInputStream fileInputStream = new FileInputStream(propertiesFile)) {
             Properties properties = new Properties();
             properties.load(fileInputStream);
             URI uri = new URI(properties.getProperty("jdbcUrl").replace("jdbc:", ""));
@@ -36,7 +37,7 @@ public class BackupJob implements Runnable {
             StringJoiner sj = new StringJoiner("_");
             sj.add(dbName);
             sj.add(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
-            sj.add(UUID.randomUUID().toString().replace("-",""));
+            sj.add(UUID.randomUUID().toString().replace("-", ""));
             File dbFile =
                     new File(Start.sqlPath + sj + ".sql");
             if (!dbFile.getParentFile().exists()) {
@@ -45,13 +46,21 @@ public class BackupJob implements Runnable {
             BackupExecution backupExecution = new BackupExecution();
             byte[] dumpFileBytes = backupExecution.getDumpFileBytes(properties.getProperty("user"), uri.getPort(),
                     uri.getHost(), dbName, properties.getProperty("password"));
+            String newFileMd5 = SecurityUtils.md5(dumpFileBytes);
+            for (File file : dbFile.getParentFile().listFiles()) {
+                try (FileInputStream fin = new FileInputStream(file.toString())) {
+                    if (Objects.equals(newFileMd5, SecurityUtils.md5(fin))) {
+                        return file;
+                    }
+                }
+            }
             IOUtil.writeBytesToFile(dumpFileBytes, dbFile);
             try {
                 Map<String, String[]> map = new HashMap<>();
                 map.put("fileInfo", new String[]{dbFile + "," + dbName + "/" + dbFile.getName()});
                 ioSession.requestService("uploadToPrivateService", map);
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "uploadToPrivate error", e);
+                LOGGER.log(Level.SEVERE, "UploadToPrivate error", e);
             }
             return dbFile;
         }
