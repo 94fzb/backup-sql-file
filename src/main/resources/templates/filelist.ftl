@@ -14,6 +14,12 @@
             font-feature-settings: 'tnum';
             background: transparent;
         }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #000;
+                color: #fff
+            }
+        }
     </style>
 </head>
 <body>
