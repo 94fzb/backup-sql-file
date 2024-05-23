@@ -20,6 +20,10 @@
                 color: #fff
             }
         }
+
+        .table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
+            background-color: inherit;
+        }
     </style>
 </head>
 <body>
