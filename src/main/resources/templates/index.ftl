@@ -30,7 +30,7 @@
     </style>
 </head>
 <body>
-<div class="col-xs-8" style="padding: 0">
+<div style="max-width: 960px;width: 100%">
     <h3>${_plugin.desc}</h3>
     <div class="text-right">
         <a href="exportSqlFile">
