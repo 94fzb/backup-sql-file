@@ -4,4 +4,4 @@ java -version
 ./mvnw -Pnative package
 basePath=/tmp/download/plugin
 mkdir -p ${basePath}
-mv target/buckup-sql-file ${basePath}/buckup-sql-file-$(uname -s)-$(uname -m).bin
+mv target/backup-sql-file ${basePath}/backup-sql-file-$(uname -s)-$(uname -m).bin
