@@ -6,13 +6,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.zrlog.plugin</groupId>
-    <artifactId>backup-sql-file</artifactId>
+    <groupId>com.zrlog</groupId>
+    <artifactId>plugin-backup-sql-file</artifactId>
     <version>2.1.21</version>
 
     <properties>
         <outputDirectory>/Users/xiaochun/zrlog-plugin/</outputDirectory>
-        <imageName>oss</imageName>
+        <imageName>backup-sql-file</imageName>
         <native.maven.plugin.version>0.9.18</native.maven.plugin.version>
         <native.image.mainClass>com.zrlog.plugin.backup.Application</native.image.mainClass>
         <native.image.agentMainClass>com.zrlog.plugin.backup.GraalvmAgentApplication</native.image.agentMainClass>
