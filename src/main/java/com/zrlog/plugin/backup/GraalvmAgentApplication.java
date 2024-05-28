@@ -18,6 +18,7 @@ public class GraalvmAgentApplication {
 
     public static void main(String[] args) throws IOException {
         new Gson().toJson(new HttpRequestInfo());
+        new Gson().toJson(new HttpRequestInfo());
         new Gson().toJson(new Plugin());
         new Gson().toJson(new HashMap<>());
         new Gson().fromJson("{}", Map.class);
