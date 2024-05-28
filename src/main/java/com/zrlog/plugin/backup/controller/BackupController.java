@@ -54,31 +54,25 @@ public class BackupController {
     }
 
     public void update() {
-        session.sendMsg(new MsgPacket(requestInfo.simpleParam(), ContentType.JSON, MsgPacketStatus.SEND_REQUEST, IdUtil.getInt(), ActionType.SET_WEBSITE.name()), new IMsgPacketCallBack() {
-            @Override
-            public void handler(MsgPacket msgPacket) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("success", true);
-                session.sendMsg(new MsgPacket(map, ContentType.JSON, MsgPacketStatus.RESPONSE_SUCCESS, requestPacket.getMsgId(), requestPacket.getMethodStr()));
-            }
+        session.sendMsg(new MsgPacket(requestInfo.simpleParam(), ContentType.JSON, MsgPacketStatus.SEND_REQUEST, IdUtil.getInt(), ActionType.SET_WEBSITE.name()), msgPacket -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("success", true);
+            session.sendMsg(new MsgPacket(map, ContentType.JSON, MsgPacketStatus.RESPONSE_SUCCESS, requestPacket.getMsgId(), requestPacket.getMethodStr()));
         });
     }
 
     public void exportSqlFile() {
-        session.sendJsonMsg(new HashMap<>(), ActionType.GET_DB_PROPERTIES.name(), IdUtil.getInt(), MsgPacketStatus.SEND_REQUEST, new IMsgPacketCallBack() {
-            @Override
-            public void handler(final MsgPacket response) {
-                Map<String, Object> map = new Gson().fromJson(response.getDataStr(), Map.class);
-                try {
-                    File file = BackupJob.backupThenStoreToPrivateStore(session, (String) map.get("dbProperties"));
-                    if (file.exists()) {
-                        session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_SUCCESS);
-                    } else {
-                        session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_ERROR);
-                    }
-                } catch (Exception e) {
-                    LOGGER.log(Level.SEVERE, "", e);
+        session.sendJsonMsg(new HashMap<>(), ActionType.GET_DB_PROPERTIES.name(), IdUtil.getInt(), MsgPacketStatus.SEND_REQUEST, response -> {
+            Map<String, Object> map = new Gson().fromJson(response.getDataStr(), Map.class);
+            try {
+                File file = BackupJob.backupThenStoreToPrivateStore(session, (String) map.get("dbProperties"));
+                if (file.exists()) {
+                    session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_SUCCESS);
+                } else {
+                    session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_ERROR);
                 }
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "", e);
             }
         });
 
@@ -95,7 +89,7 @@ public class BackupController {
 
     }
 
-    public void filelist() {
+    public void files() {
         File[] files = new File(Application.sqlPath).listFiles();
         List<File> fileList = new ArrayList<>();
         if (files != null && files.length > 0) {
@@ -119,7 +113,7 @@ public class BackupController {
         }
         map.put("files", fileListMap);
         map.put("maxKeepSize", Application.maxBackupSqlFileCount);
-        session.responseHtml("/templates/filelist.ftl", map, requestPacket.getMethodStr(), requestPacket.getMsgId());
+        session.responseHtml("/templates/files.ftl", map, requestPacket.getMethodStr(), requestPacket.getMsgId());
     }
 
     public void downfile() {

@@ -21,6 +21,7 @@
             font-feature-settings: 'tnum';
             background: transparent;
         }
+
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: #000;
@@ -64,7 +65,7 @@
                 </select>
             </div>
             <div>
-                <h4><a href="filelist?spm=index">查看历史备份文件</a></h4>
+                <h4><a href="files?spm=index">查看历史备份文件</a></h4>
             </div>
         </div>
         <hr/>
