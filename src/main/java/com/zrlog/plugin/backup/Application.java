@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Start {
+public class Application {
 
     public static final String sqlPath = PathKit.getRootPath() + "/sql/";
     public static final int maxBackupSqlFileCount = 20;

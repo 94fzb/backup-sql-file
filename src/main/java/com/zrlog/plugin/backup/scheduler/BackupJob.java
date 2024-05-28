@@ -1,7 +1,7 @@
 package com.zrlog.plugin.backup.scheduler;
 
 import com.zrlog.plugin.IOSession;
-import com.zrlog.plugin.backup.Start;
+import com.zrlog.plugin.backup.Application;
 import com.zrlog.plugin.backup.scheduler.handle.BackupExecution;
 import com.zrlog.plugin.common.LoggerUtil;
 import com.zrlog.plugin.common.SecurityUtils;
@@ -37,7 +37,7 @@ public class BackupJob implements Runnable {
             sj.add(dbName);
             sj.add(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
             sj.add(UUID.randomUUID().toString().replace("-", ""));
-            File dbFile = new File(Start.sqlPath + sj + ".sql");
+            File dbFile = new File(Application.sqlPath + sj + ".sql");
             if (!dbFile.getParentFile().exists()) {
                 dbFile.getParentFile().mkdirs();
             }
@@ -65,7 +65,7 @@ public class BackupJob implements Runnable {
     }
 
     public static void clearFile() {
-        File dbPath = new File(Start.sqlPath);
+        File dbPath = new File(Application.sqlPath);
         if (dbPath.exists()) {
             File[] files = dbPath.listFiles();
             if (files != null) {
@@ -75,9 +75,9 @@ public class BackupJob implements Runnable {
                         fileList.add(file);
                     }
                 }
-                if (fileList.size() > Start.maxBackupSqlFileCount) {
+                if (fileList.size() > Application.maxBackupSqlFileCount) {
                     fileList.sort(Comparator.comparingLong(File::lastModified));
-                    List<File> needRemoveFileList = fileList.subList(0, fileList.size() - Start.maxBackupSqlFileCount);
+                    List<File> needRemoveFileList = fileList.subList(0, fileList.size() - Application.maxBackupSqlFileCount);
                     for (File file : needRemoveFileList) {
                         file.delete();
                     }

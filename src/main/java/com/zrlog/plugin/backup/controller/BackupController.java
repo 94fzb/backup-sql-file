@@ -3,7 +3,7 @@ package com.zrlog.plugin.backup.controller;
 import com.google.gson.Gson;
 import com.zrlog.plugin.IMsgPacketCallBack;
 import com.zrlog.plugin.IOSession;
-import com.zrlog.plugin.backup.Start;
+import com.zrlog.plugin.backup.Application;
 import com.zrlog.plugin.backup.scheduler.BackupJob;
 import com.zrlog.plugin.common.IdUtil;
 import com.zrlog.plugin.common.LoggerUtil;
@@ -14,7 +14,6 @@ import com.zrlog.plugin.data.codec.MsgPacketStatus;
 import com.zrlog.plugin.type.ActionType;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -97,7 +96,7 @@ public class BackupController {
     }
 
     public void filelist() {
-        File[] files = new File(Start.sqlPath).listFiles();
+        File[] files = new File(Application.sqlPath).listFiles();
         List<File> fileList = new ArrayList<>();
         if (files != null && files.length > 0) {
             for (File file : files) {
@@ -119,12 +118,12 @@ public class BackupController {
             fileListMap.add(tMap);
         }
         map.put("files", fileListMap);
-        map.put("maxKeepSize", Start.maxBackupSqlFileCount);
+        map.put("maxKeepSize", Application.maxBackupSqlFileCount);
         session.responseHtml("/templates/filelist.ftl", map, requestPacket.getMethodStr(), requestPacket.getMsgId());
     }
 
     public void downfile() {
-        File file = new File(Start.sqlPath + requestInfo.simpleParam().get("file"));
+        File file = new File(Application.sqlPath + requestInfo.simpleParam().get("file"));
         if (file.exists()) {
             session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_SUCCESS);
         } else {
