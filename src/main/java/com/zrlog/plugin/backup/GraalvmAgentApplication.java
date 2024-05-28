@@ -25,7 +25,13 @@ public class GraalvmAgentApplication {
         File file = new File(basePath + "/src/main/resources");
         PluginNativeImageUtils.doLoopResourceLoad(file.listFiles(), file.getPath() + "/", "/");
         //Application.nativeAgent = true;
-        new FreeMarkerRenderHandler().render("/templates/index.ftl", new Plugin(), new HashMap<>());
+        Plugin plugin = new Plugin();
+        plugin.setName("test");
+        plugin.setDesc("test");
+        plugin.setVersion("test");
+        Map<String, Object> objectObjectHashMap = new HashMap<>();
+        objectObjectHashMap.put("cycle", "3600");
+        new FreeMarkerRenderHandler().render("/templates/index.ftl", plugin, objectObjectHashMap);
         PluginNativeImageUtils.exposeController(Collections.singletonList(BackupController.class));
         Application.main(args);
 
