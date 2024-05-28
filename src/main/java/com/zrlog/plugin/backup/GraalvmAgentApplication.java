@@ -20,7 +20,7 @@ public class GraalvmAgentApplication {
         new Gson().toJson(new Plugin());
         String basePath = System.getProperty("user.dir").replace("/target", "");
         File file = new File(basePath + "/src/main/resources");
-        PluginNativeImageUtils.doLoopResourceLoad(file.listFiles(), file.getPath(), "/");
+        PluginNativeImageUtils.doLoopResourceLoad(file.listFiles(), file.getPath() + "/", "/");
         //Application.nativeAgent = true;
         PluginNativeImageUtils.exposeController(Collections.singletonList(BackupController.class));
         Application.main(args);
