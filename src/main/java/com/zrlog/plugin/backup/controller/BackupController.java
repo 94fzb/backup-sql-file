@@ -117,9 +117,10 @@ public class BackupController {
     }
 
     public void downfile() {
-        System.out.println("new Gson(). = " + new Gson().toJson(requestInfo));
         File file = new File(Application.sqlPath + requestInfo.simpleParam().get("file"));
+        System.out.println("file" + file);
         if (file.exists()) {
+            System.out.println("file ok" + file);
             session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_SUCCESS);
         } else {
             session.sendFileMsg(file, requestPacket.getMsgId(), MsgPacketStatus.RESPONSE_ERROR);
