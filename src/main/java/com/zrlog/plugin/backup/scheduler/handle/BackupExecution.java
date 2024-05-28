@@ -23,7 +23,7 @@ public class BackupExecution {
         if (testMysqlDumpInstalled()) {
             binFile = new File("mysqldump");
         } else {
-            String path = System.getProperties().getProperty("os.arch") + "/" + System.getProperties().getProperty(
+            String path = System.getProperties().getProperty("os.arch").replace("amd64","x86_64") + "/" + System.getProperties().getProperty(
                     "os.name").toLowerCase().replace(" ", "") + "/mysqldump";
             binFile = new File(PathKit.getTmpPath() + "/" + path);
             LOGGER.info("Temp file " + binFile + ", path " + path);
