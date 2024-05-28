@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GraalvmAgentApplication {
 
@@ -18,6 +20,8 @@ public class GraalvmAgentApplication {
     public static void main(String[] args) throws IOException {
         new Gson().toJson(new HttpRequestInfo());
         new Gson().toJson(new Plugin());
+        new Gson().toJson(new HashMap<>());
+        new Gson().fromJson("{}", Map.class);
         String basePath = System.getProperty("user.dir").replace("/target", "");
         File file = new File(basePath + "/src/main/resources");
         PluginNativeImageUtils.doLoopResourceLoad(file.listFiles(), file.getPath() + "/", "/");
