@@ -14,6 +14,16 @@
             font-feature-settings: 'tnum';
             background: transparent;
         }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #000;
+                color: #fff
+            }
+        }
+
+        .table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
+            background-color: inherit;
+        }
     </style>
 </head>
 <body>
