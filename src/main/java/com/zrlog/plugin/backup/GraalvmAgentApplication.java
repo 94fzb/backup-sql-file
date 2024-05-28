@@ -3,6 +3,7 @@ package com.zrlog.plugin.backup;
 import com.google.gson.Gson;
 import com.zrlog.plugin.backup.controller.BackupController;
 import com.zrlog.plugin.common.PluginNativeImageUtils;
+import com.zrlog.plugin.data.codec.FileDesc;
 import com.zrlog.plugin.data.codec.HttpRequestInfo;
 import com.zrlog.plugin.message.Plugin;
 import com.zrlog.plugin.render.FreeMarkerRenderHandler;
@@ -18,6 +19,7 @@ public class GraalvmAgentApplication {
 
     public static void main(String[] args) throws IOException {
         new Gson().toJson(new HttpRequestInfo());
+        new Gson().toJson(new FileDesc());
         new Gson().toJson(new HttpRequestInfo());
         new Gson().toJson(new Plugin());
         new Gson().toJson(new HashMap<>());
