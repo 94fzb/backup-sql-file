@@ -46,7 +46,7 @@
     <hr/>
     <form id="ajaxBackupSql" class="form-horizontal" role="form">
         <div style="display: flex;align-items: center;gap: 24px">
-            <label class="" style="width: 120px"> 备份周期 </label>
+            <label class="" style="width: 80px"> 备份周期 </label>
             <select class="form-control" name="cycle" style="max-width: 240px">
                 <option value="3600"
                         <#if '3600'==cycle>selected="selected"</#if>
@@ -67,7 +67,7 @@
             </select>
         </div>
         <hr/>
-        <button class="btn btn-info" type="button" id="BackupSql" style="margin-left: 144px">
+        <button class="btn btn-info" type="button" id="BackupSql" style="margin-left: 104px">
             提交
         </button>
     </form>
