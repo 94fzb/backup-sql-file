@@ -33,7 +33,7 @@
     <h3>${_plugin.desc}</h3>
     <div style="display: flex;justify-content: end;gap: 16px">
         <a href="files?spm=index">
-            <button class="btn btn-default" type="button">
+            <button class="btn btn-link" type="button">
                 查看备份文件
             </button>
         </a>
