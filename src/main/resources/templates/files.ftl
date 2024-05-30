@@ -14,11 +14,9 @@
             font-feature-settings: 'tnum';
             background: transparent;
         }
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #000;
-                color: #fff
-            }
+        .dark {
+            background-color: #000;
+            color: #fff
         }
 
         .table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
@@ -26,7 +24,7 @@
         }
     </style>
 </head>
-<body>
+<body class="${theme}">
 <div class="main-container" style="max-width: 960px;width: 100%">
     <h3>查看文件列表 (仅保留最近${maxKeepSize}条记录)</h3>
     <hr/>

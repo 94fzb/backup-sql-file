@@ -22,15 +22,13 @@
             background: transparent;
         }
 
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #000;
-                color: #fff
-            }
+        .dark {
+            background-color: #000;
+            color: #fff
         }
     </style>
 </head>
-<body>
+<body class="${theme}">
 <div style="max-width: 960px;width: 100%">
     <h3>${_plugin.desc}</h3>
     <div class="text-right">

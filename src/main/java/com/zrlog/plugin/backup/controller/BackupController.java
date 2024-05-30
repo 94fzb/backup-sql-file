@@ -1,7 +1,6 @@
 package com.zrlog.plugin.backup.controller;
 
 import com.google.gson.Gson;
-import com.zrlog.plugin.IMsgPacketCallBack;
 import com.zrlog.plugin.IOSession;
 import com.zrlog.plugin.backup.Application;
 import com.zrlog.plugin.backup.scheduler.BackupJob;
@@ -84,6 +83,7 @@ public class BackupController {
         session.sendJsonMsg(keyMap, ActionType.GET_WEBSITE.name(), IdUtil.getInt(), MsgPacketStatus.SEND_REQUEST, msgPacket -> {
             Map map = new Gson().fromJson(msgPacket.getDataStr(), Map.class);
             map.putIfAbsent("cycle", "3600");
+            map.put("theme", Objects.equals(requestInfo.getHeader().get("Dark-Mode"), "true") ? "dark" : "light");
             session.responseHtml("/templates/index.ftl", map, requestPacket.getMethodStr(), requestPacket.getMsgId());
         });
 
@@ -113,6 +113,7 @@ public class BackupController {
         }
         map.put("files", fileListMap);
         map.put("maxKeepSize", Application.maxBackupSqlFileCount);
+        map.put("theme", Objects.equals(requestInfo.getHeader().get("Dark-Mode"), "true") ? "dark" : "light");
         session.responseHtml("/templates/files.ftl", map, requestPacket.getMethodStr(), requestPacket.getMsgId());
     }
 
