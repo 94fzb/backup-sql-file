@@ -45,35 +45,31 @@
     </div>
     <hr/>
     <form id="ajaxBackupSql" class="form-horizontal" role="form">
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right"> 备份周期 </label>
-            <div class="col-sm-3">
-                <select class="form-control" name="cycle">
-                    <option value="3600"
-                            <#if '3600'==cycle>selected="selected"</#if>
-                    >1小时
-                    </option>
-                    <option value="21600"
-                            <#if '21600'==cycle>selected="selected"</#if>
-                    >6小时
-                    </option>
-                    <option value="43200"
-                            <#if '43200'==cycle>selected="selected"</#if>
-                    >12小时
-                    </option>
-                    <option value="86400"
-                            <#if '86400'==cycle>selected="selected"</#if>
-                    >1天
-                    </option>
-                </select>
-            </div>
+        <div style="display: flex;align-items: center;gap: 24px">
+            <label class=""> 备份周期 </label>
+            <select class="form-control" name="cycle">
+                <option value="3600"
+                        <#if '3600'==cycle>selected="selected"</#if>
+                >1小时
+                </option>
+                <option value="21600"
+                        <#if '21600'==cycle>selected="selected"</#if>
+                >6小时
+                </option>
+                <option value="43200"
+                        <#if '43200'==cycle>selected="selected"</#if>
+                >12小时
+                </option>
+                <option value="86400"
+                        <#if '86400'==cycle>selected="selected"</#if>
+                >1天
+                </option>
+            </select>
         </div>
         <hr/>
-        <div class="col-md-offset-3 col-md-9">
-            <button class="btn btn-info" type="button" id="BackupSql">
-                提交
-            </button>
-        </div>
+        <button class="btn btn-info" type="button" id="BackupSql">
+            提交
+        </button>
     </form>
     <input id="gritter-light" checked="" type="checkbox" style="display:none"/>
 </div>
