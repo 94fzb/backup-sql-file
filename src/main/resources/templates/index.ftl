@@ -31,15 +31,20 @@
 <body class="${theme}">
 <div style="max-width: 960px;width: 100%">
     <h3>${_plugin.desc}</h3>
-    <div class="text-right">
+    <div style="display: flex;justify-content: end">
         <a href="exportSqlFile">
-            <button class="btn btn-default" type="button" id="emailServiceMsg">
+            <button class="btn btn-default" type="button">
                 导出SQL文件
+            </button>
+        </a>
+        <a href="files?spm=index">
+            <button class="btn btn-default" type="button">
+                查看备份文件
             </button>
         </a>
     </div>
     <hr/>
-    <form id="ajaxemailServiceMsg" class="form-horizontal" role="form">
+    <form id="ajaxBackupSql" class="form-horizontal" role="form">
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right"> 备份周期 </label>
             <div class="col-sm-3">
@@ -62,13 +67,10 @@
                     </option>
                 </select>
             </div>
-            <div>
-                <h4><a href="files?spm=index">查看历史备份文件</a></h4>
-            </div>
         </div>
         <hr/>
         <div class="col-md-offset-3 col-md-9">
-            <button class="btn btn-info" type="button" id="emailServiceMsg">
+            <button class="btn btn-info" type="button" id="BackupSql">
                 提交
             </button>
         </div>
