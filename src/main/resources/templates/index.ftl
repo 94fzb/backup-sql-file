@@ -31,15 +31,15 @@
 <body class="${theme}">
 <div style="max-width: 960px;width: 100%">
     <h3>${_plugin.desc}</h3>
-    <div style="display: flex;justify-content: end">
-        <a href="exportSqlFile">
-            <button class="btn btn-default" type="button">
-                导出SQL文件
-            </button>
-        </a>
+    <div style="display: flex;justify-content: end;gap: 16px">
         <a href="files?spm=index">
             <button class="btn btn-default" type="button">
                 查看备份文件
+            </button>
+        </a>
+        <a href="exportSqlFile">
+            <button class="btn btn-default" type="button">
+                导出SQL文件
             </button>
         </a>
     </div>
