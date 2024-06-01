@@ -23,15 +23,16 @@ public class BackupExecution {
         if (testMysqlDumpInstalled()) {
             binFile = new File("mysqldump");
         } else {
-            String path = System.getProperties().getProperty("os.arch").replace("amd64","x86_64") + "/" + System.getProperties().getProperty(
+            String path = System.getProperties().getProperty("os.arch").replace("amd64", "x86_64") + "/" + System.getProperties().getProperty(
                     "os.name").toLowerCase().replace(" ", "") + "/mysqldump";
             binFile = new File(PathKit.getTmpPath() + "/" + path);
             LOGGER.info("Temp file " + binFile + ", path " + path);
             copyInternalFileTo(BackupExecution.class.getResourceAsStream("/lib/" + path), binFile);
             //unix 设置执行权限
-            if ("/".equals(File.separator)) {
-                Runtime.getRuntime().exec("chmod 777 " + binFile);
+            if (path.contains("windows")) {
+                return binFile;
             }
+            Runtime.getRuntime().exec("chmod 777 " + binFile);
         }
         return binFile;
     }

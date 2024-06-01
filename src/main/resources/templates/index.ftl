@@ -47,7 +47,7 @@
     <form id="ajaxBackupSql" class="form-horizontal" role="form">
         <div style="display: flex;align-items: center;gap: 24px">
             <label class="" style="text-align:end; width: 80px"> 备份周期 </label>
-            <select class="form-control" name="cycle" style="max-width: 240px">
+            <select class="form-control" name="cycle" style="max-width: 180px">
                 <option value="3600"
                         <#if '3600'==cycle>selected="selected"</#if>
                 >1小时
