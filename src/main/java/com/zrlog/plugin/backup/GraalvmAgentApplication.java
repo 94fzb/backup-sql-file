@@ -16,7 +16,7 @@ public class GraalvmAgentApplication {
 
     public static void main(String[] args) throws IOException {
         PluginNativeImageUtils.usedGsonObject();
-        String basePath = System.getProperty("user.dir").replace("/target", "");
+        String basePath = System.getProperty("user.dir").replace("\\target","").replace("/target", "");
         File file = new File(basePath + "/src/main/resources");
         PluginNativeImageUtils.doLoopResourceLoad(file.listFiles(), file.getPath() + "/", "/");
         //Application.nativeAgent = true;
