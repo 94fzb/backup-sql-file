@@ -32,7 +32,13 @@ public class BackupExecution {
             if (path.contains("windows")) {
                 return binFile;
             }
-            Runtime.getRuntime().exec("chmod 777 " + binFile);
+            Process process = Runtime.getRuntime().exec("chmod 777 " + binFile);
+            try {
+                process.waitFor();
+                process.destroy();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         return binFile;
     }
