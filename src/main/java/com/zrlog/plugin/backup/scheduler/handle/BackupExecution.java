@@ -26,7 +26,9 @@ public class BackupExecution {
             String path = System.getProperties().getProperty("os.arch").replace("amd64", "x86_64") + "/" + System.getProperties().getProperty(
                     "os.name").toLowerCase().replace(" ", "") + "/mysqldump";
             binFile = new File(PathKit.getTmpPath() + "/" + path);
-            LOGGER.info("Temp file " + binFile + ", path " + path);
+            if (RunConstants.runType == RunType.DEV) {
+                LOGGER.info("Temp file " + binFile + ", path " + path);
+            }
             copyInternalFileTo(BackupExecution.class.getResourceAsStream("/lib/" + path), binFile);
             //unix 设置执行权限
             if (path.contains("windows")) {
