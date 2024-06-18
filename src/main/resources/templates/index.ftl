@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <title>${_plugin.name} - V${_plugin.version}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="assets/css/jquery.gritter.css"/>
@@ -30,7 +31,7 @@
 </head>
 <body class="${theme}">
 <div style="max-width: 960px;width: 100%">
-    <h3>${_plugin.desc}</h3>
+    <h3 style="padding-top: 20px">${_plugin.desc}</h3>
     <div style="display: flex;justify-content: end;gap: 16px">
         <a href="files?spm=index">
             <button class="btn btn-link" type="button">
@@ -38,7 +39,7 @@
             </button>
         </a>
         <a href="exportSqlFile">
-            <button class="btn btn-default" type="button">
+            <button class="btn btn-info" type="button">
                 导出SQL文件
             </button>
         </a>
@@ -67,7 +68,7 @@
             </select>
         </div>
         <hr/>
-        <button class="btn btn-info" type="button" id="BackupSql" style="margin-left: 104px">
+        <button class="btn btn-primary" type="button" id="BackupSql" style="margin-left: 104px">
             提交
         </button>
     </form>

@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <title>${_plugin.name} - V${_plugin.version} - 记录查看</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
     <link rel="stylesheet" href="assets/css/bootstrap.min.css"/>
     <style>
         body {
@@ -26,9 +28,9 @@
 </head>
 <body class="${theme}">
 <div class="main-container" style="max-width: 960px;width: 100%">
-    <h3>查看文件列表 (仅保留最近${maxKeepSize}条记录)</h3>
+    <h3 style="padding-top: 20px">查看文件列表 <span style="font-weight: 400;color: gray;font-size: 18px">(仅保留最近${maxKeepSize}条记录)</span></h3>
     <hr/>
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped" style="min-width: 600px">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -41,7 +43,7 @@
         <#list files as file>
             <tr>
                 <th scope="row">${file.index}</th>
-                <td><a href="downfile?file=${file.fileName}">${file.fileName}</a></td>
+                <td style="max-width: 240px;overflow: hidden;text-overflow: ellipsis;"><a href="downfile?file=${file.fileName}">${file.fileName}</a></td>
                 <td>${file.lastModified}</td>
                 <td>${file.size}</td>
             </tr>
