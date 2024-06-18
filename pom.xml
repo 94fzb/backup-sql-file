@@ -8,7 +8,7 @@
 
     <groupId>com.zrlog</groupId>
     <artifactId>plugin-backup-sql-file</artifactId>
-    <version>3.0.5</version>
+    <version>3.0.23</version>
 
     <properties>
         <outputDirectory>/Users/xiaochun/zrlog-plugin/</outputDirectory>
@@ -22,7 +22,7 @@
         <dependency>
             <artifactId>zrlog-plugin-freemarker-render</artifactId>
             <groupId>com.hibegin</groupId>
-            <version>3.0.5</version>
+            <version>3.0.23</version>
         </dependency>
     </dependencies>
 
