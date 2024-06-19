@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="assets/css/jquery.gritter.css"/>
 
     <script src="assets/js/jquery-2.0.3.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/jquery.gritter.min.js"></script>
     <script src="js/set_update.js"></script>
     <style>
